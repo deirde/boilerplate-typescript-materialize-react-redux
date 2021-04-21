@@ -3,31 +3,31 @@ import { IConfigType } from '../types';
 import { initialAppState } from '../boot/initialAppState';
 import { Dispatch } from 'react';
 import { configClient } from '../boot/configClient';
-import { unsetLoading } from './appActionsReducer';
+// import { unsetLoading } from './appActionsReducer';
 
 enum ConfigActions {
-  UPDATE_CONFIG = 'UPDATE_CONFIG',
+  CONFIG_UPDATE = 'CONFIG_UPDATE',
 }
 
-const updateConfig = (config: IConfigType) => {
+const configUpdate = (payload: IConfigType) => {
   return {
-    type: ConfigActions.UPDATE_CONFIG,
-    config: config,
+    type: ConfigActions.CONFIG_UPDATE,
+    payload,
   };
 };
 
-export const initPollConfig = () => {
+export const actionInitPollConfig = () => {
   return (dispatch: Dispatch<any>) => {
     setTimeout(function handlePollConfig() {
       fetch(configClient.getInstance()._request)
         .then((response) => response.json())
         .then((payload) => {
-          dispatch(updateConfig({ config: payload }));
-          dispatch(unsetLoading());
+          dispatch(configUpdate(payload));
+          // dispatch(unsetLoading());
         });
       setTimeout(
         handlePollConfig,
-        configClient.getInstance()._pollConfigTimeoutValue
+        configClient.getInstance().pollConfigTimeoutValue
       );
     });
   };
@@ -37,10 +37,10 @@ export const configReducer = (
   state = initialAppState.config,
   action: AnyAction
 ): IConfigType => {
-  if (action.config) {
+  if (action.type === ConfigActions.CONFIG_UPDATE && action.payload) {
     return {
       ...state,
-      ...action.config.config,
+      ...action.payload,
     };
   }
   return state;

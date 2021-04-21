@@ -1,8 +1,8 @@
 export interface IInitialAppStateType {
-  app: IAppType;
-  authentication: IAuthenticationType;
   config: IConfigType;
   loader: ILoaderType;
+  app: IAppType;
+  authentication: IAuthenticationType;
   loading: ILoadingType;
   view: IViewType;
 }
@@ -28,7 +28,7 @@ export interface IConfigType {
 export interface ILoaderType {
   enabled: boolean;
   level: 0 | 1 | 2;
-  chunks: [any];
+  chunks: string[];
 }
 
 export interface ILoadingType {

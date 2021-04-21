@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { IInitialAppStateType } from '../../types';
+import { IInitialAppStateType, ILoaderType } from '../../types';
 import Header from '../header/header';
 import Home from '../home/homeContainer';
 import { InitialLoader, FullPageLoader, InPageLoader } from '../loader/loader';
@@ -12,20 +12,30 @@ import {
   handleActionLoadingSetCategoryAndChunks,
   handleActionLoadingDecreaseChunks,
 } from '../../store/loadingActionsReducer';
-import { initPollConfig } from '../../store/configActionsReducer';
+import {
+  actionLoaderSetEnabled,
+  actionLoaderSetChunks,
+  actionLoaderRemoveChunk,
+} from '../../store/loaderActionsReducer';
+import { actionInitPollConfig } from '../../store/configActionsReducer';
 import { getFeature, getConfig } from '../../boot/configClient';
+import IndexLayout from './indexLayout';
 
 interface OwnProps {}
 
 interface StateProps {
   loading: boolean;
-  initPollConfig: () => void;
+  loaderEnabled: boolean;
+  actionInitPollConfig: () => void;
   handleActionLoadingSetCategory: (category: string) => void;
   handleActionLoadingSetCategoryAndChunks: (
     category: string,
     chunks: number
   ) => void;
   handleActionLoadingDecreaseChunks: () => void;
+  actionLoaderSetEnabled: (payload: ILoaderType['enabled']) => void;
+  actionLoaderSetChunks: (payload: ILoaderType['chunks']) => void;
+  actionLoaderRemoveChunk: (payload: string) => void;
 }
 
 interface State {
@@ -44,14 +54,21 @@ class Index extends React.Component<Props, State> {
     // this.props.handleActionLoadingDecreaseChunks();
     // this.props.handleActionLoadingDecreaseChunks();
     //this.props.handleActionLoadingSetCategory('fullPage')
-    this.props.initPollConfig();
+    this.props.actionInitPollConfig();
+    this.props.actionLoaderSetEnabled(true);
+    this.props.actionLoaderSetChunks(['loadhomeItems', 'pinkopanko22']);
+    this.props.actionLoaderRemoveChunk('pinkopanko22');
+    this.props.actionLoaderRemoveChunk('pinkopanko22');
+    this.props.actionLoaderRemoveChunk('loplop');
+    this.props.actionLoaderRemoveChunk('qqq');
+    // this.props.actionLoaderSetEnabled(false);
 
-    console.log('>>>getFeature__darkMode', getFeature('darkMode'));
-    console.log('>>>', getConfig());
+    // console.log('>>>getFeature__darkMode', getFeature('darkMode'));
+    // console.log('>>>', getConfig());
   }
 
   componentDidUpdate() {
-    console.log('>>>componentDidUpdate');
+    // console.log('>>>componentDidUpdate');
   }
 
   renderBody() {
@@ -83,9 +100,7 @@ const mapDispatchToProps = (
   dispatch: ThunkDispatch<IInitialAppStateType, void, AnyAction>
 ) => {
   return {
-    initPollConfig: () => {
-      dispatch(initPollConfig());
-    },
+    actionInitPollConfig: () => dispatch(actionInitPollConfig()),
     handleActionLoadingSetCategory: (category: string) =>
       dispatch(handleActionLoadingSetCategory(category)),
     handleActionLoadingSetCategoryAndChunks: (
@@ -94,11 +109,21 @@ const mapDispatchToProps = (
     ) => dispatch(handleActionLoadingSetCategoryAndChunks(category, chunks)),
     handleActionLoadingDecreaseChunks: () =>
       dispatch(handleActionLoadingDecreaseChunks()),
+
+    actionLoaderSetEnabled: (payload: ILoaderType['enabled']) =>
+      dispatch(actionLoaderSetEnabled(payload)),
+
+    actionLoaderSetChunks: (payload: ILoaderType['chunks']) =>
+      dispatch(actionLoaderSetChunks(payload)),
+
+    actionLoaderRemoveChunk: (payload: string) =>
+      dispatch(actionLoaderRemoveChunk(payload)),
   };
 };
 
 const mapStateToProps = (state: IInitialAppStateType, ownProps: OwnProps) => ({
   loading: state.app.loading,
+  loaderEnabled: state.loader.enabled,
 });
 const connector = connect(mapStateToProps, mapDispatchToProps);
 export type IndexProps = ConnectedProps<typeof connector>;
