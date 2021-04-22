@@ -5,8 +5,9 @@ export const initialAppState: IInitialAppStateType = {
   loader: {
     enabled: true,
     level: 0,
-    chunks: ['config'],
+    chunks: ['CHUNK_CONFIG'],
   },
+  homeItems: {},
   loading: {
     category: 'fullPageLoader',
     chunks: 11,

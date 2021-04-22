@@ -3,7 +3,6 @@ import { IConfigType } from '../types';
 import { initialAppState } from '../boot/initialAppState';
 import { Dispatch } from 'react';
 import { configClient } from '../boot/configClient';
-// import { unsetLoading } from './appActionsReducer';
 
 enum ConfigActions {
   CONFIG_UPDATE = 'CONFIG_UPDATE',
@@ -23,7 +22,6 @@ export const actionInitPollConfig = () => {
         .then((response) => response.json())
         .then((payload) => {
           dispatch(configUpdate(payload));
-          // dispatch(unsetLoading());
         });
       setTimeout(
         handlePollConfig,

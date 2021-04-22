@@ -9,6 +9,7 @@ import { appReducer } from '../store/appActionsReducer';
 import { viewReducer } from '../store/viewActionsReducer';
 import { authenticationReducer } from '../store/authActionsReducer';
 import { loaderReducer } from '../store/loaderActionsReducer';
+import { homeItemsReducer } from '../store/homeItemsActionReducer';
 
 export const setupStore = (config: any): Store<IInitialAppStateType> => {
   const middlewares = [thunkMiddleware, createLogger()];
@@ -18,6 +19,7 @@ export const setupStore = (config: any): Store<IInitialAppStateType> => {
   const rootReducer = combineReducers<IInitialAppStateType>({
     config: configReducer,
     loader: loaderReducer,
+    homeItems: homeItemsReducer,
     loading: loadingReducer,
     app: appReducer,
     view: viewReducer,

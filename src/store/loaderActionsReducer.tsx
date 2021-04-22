@@ -7,13 +7,13 @@ enum LoaderActions {
   LOADER_SET_ENABLED = 'LOADER_SET_ENABLED',
   LOADER_SET_LEVEL = 'LOADER_SET_LEVEL',
   LOADER_SET_CHUNKS = 'LOADER_SET_CHUNKS',
+  LOADER_ADD_CHUNK = 'LOADER_ADD_CHUNK',
   LOADER_REMOVE_CHUNK = 'LOADER_REMOVE_CHUNK',
   LOADER_CLEAN_CHUNKS = 'LOADER_CLEAN_CHUNKS',
 }
 
 export enum LoaderChunks {
   CHUNK_CONFIG = 'CHUNK_CONFIG',
-  CHUNK_AUTH = 'CHUNK_AUTH',
 }
 
 const loaderSetEnabled = (payload: ILoaderType['enabled']) => {
@@ -33,6 +33,13 @@ const loaderSetLevel = (payload: ILoaderType['level']) => {
 const loaderSetChunks = (payload: ILoaderType['chunks']) => {
   return {
     type: LoaderActions.LOADER_SET_CHUNKS,
+    payload,
+  };
+};
+
+const loaderAddChunk = (payload: string) => {
+  return {
+    type: LoaderActions.LOADER_ADD_CHUNK,
     payload,
   };
 };
@@ -68,6 +75,12 @@ export const actionLoaderSetChunks = (payload: ILoaderType['chunks']) => {
   };
 };
 
+export const actionLoaderAddChunk = (payload: string) => {
+  return (dispatch: Dispatch<any>) => {
+    dispatch(loaderAddChunk(payload));
+  };
+};
+
 export const actionLoaderRemoveChunk = (payload: string) => {
   return (dispatch: Dispatch<any>) => {
     dispatch(loaderRemoveChunk(payload));
@@ -91,15 +104,31 @@ export const loaderReducer = (
         enabled: action.payload,
       };
     case LoaderActions.LOADER_SET_LEVEL:
-      return {
-        ...state,
-        level: action.payload,
-      };
+      if (action.paylod < state.level) {
+        return {
+          ...state,
+          level: action.payload,
+        };
+      }
+      return state;
     case LoaderActions.LOADER_SET_CHUNKS:
       return {
         ...state,
         chunks: action.payload,
       };
+    case LoaderActions.LOADER_ADD_CHUNK:
+      if (state.chunks.indexOf(action.payload) < 0) {
+        let chunks = [...state.chunks, action.payload];
+        let level = chunks.length > 0 ? 1 : state.level;
+        let enabled = !Boolean(state.chunks.length);
+        return {
+          ...state,
+          level,
+          enabled,
+          chunks,
+        };
+      }
+      return state;
     case LoaderActions.LOADER_REMOVE_CHUNK:
       let index = state.chunks.indexOf(action.payload);
       index > -1 && state.chunks.splice(index, 1);

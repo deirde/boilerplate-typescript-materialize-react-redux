@@ -1,6 +1,7 @@
 export interface IInitialAppStateType {
   config: IConfigType;
   loader: ILoaderType;
+  homeItems: IHomeItemsType;
   app: IAppType;
   authentication: IAuthenticationType;
   loading: ILoadingType;
@@ -31,6 +32,14 @@ export interface ILoaderType {
   chunks: string[];
 }
 
+export interface IHomeItemsType {
+  [key: string]: IHomeItemType;
+}
+
+interface IHomeItemType {
+  id: any;
+}
+
 export interface ILoadingType {
   chunks?: number;
   category?: 'initialLoader' | 'fullPageLoader' | 'inPageLoader';
@@ -38,4 +47,8 @@ export interface ILoadingType {
 
 export interface IViewType {
   loading: boolean;
+}
+
+export interface IInternalComponentStateFieldType {
+  internalComponentStateField: string;
 }
