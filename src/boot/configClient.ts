@@ -17,19 +17,20 @@ export class configClient {
 
   private _requestParams(): string {
     const _urls: { [key: string]: string } = {
-      DEV: 'http://116.203.142.6:9001/config',
+      //DEV: 'http://116.203.142.6:9001/config',
+      DEV: 'https://pcms.123beta.net/config/config.json',
       PROD: '',
     };
     return _urls[this.environment];
   }
 
-  public _request = new Request(this._requestParams(), {
+  public request = new Request(this._requestParams(), {
     method: 'GET',
   });
 
   public pollConfig(): void {
     setTimeout(function pollConfig() {
-      fetch(configClient.instance._request)
+      fetch(configClient.instance.request)
         .then((response) => response.json())
         .then((payload) => (configClient.instance.config = payload));
       setTimeout(pollConfig, configClient.instance.pollConfigTimeoutValue);
@@ -44,24 +45,32 @@ export class configClient {
   }
 }
 
-export const getEnvironment = (): string => {
+export const configGetEnvironment = (): string => {
   return configClient.getInstance().environment;
 };
 
-export const getTerritory = (): string => {
+export const configGetTerritory = (): string => {
   return configClient.getInstance().territory;
 };
 
-export const getFeature = (feature: string): IConfigType => {
+export const configGetFeature = (feature: string): IConfigType => {
   return configClient.getInstance().config.features[feature];
 };
 
-export const getConfig = (): object => {
+export const configGetConfig = (): object => {
   return configClient.getInstance().config;
 };
 
+export const configGetServices = (): object => {
+  return configClient.getInstance().config.services;
+};
+
+export const configGetService = (serviceName: string): string => {
+  return configClient.getInstance().config.services[serviceName];
+};
+
 export async function fetchConfig(): Promise<void> {
-  await fetch(configClient.getInstance()._request)
+  await fetch(configClient.getInstance().request)
     .then((response) => response.json())
     .then((payload) => (configClient.getInstance().config = payload))
     .catch((e) => {

@@ -74,7 +74,7 @@ export const loadingReducer = (
       };
     case LoadingActions.LOADING_DECREASE_CHUNKS:
       if (state.chunks) {
-        if (state.chunks <= 1) {
+        if (state.chunks && state.chunks <= 1) {
           return {};
         } else {
           return {
@@ -83,6 +83,7 @@ export const loadingReducer = (
           };
         }
       }
+      return {};
     default:
       return state;
   }

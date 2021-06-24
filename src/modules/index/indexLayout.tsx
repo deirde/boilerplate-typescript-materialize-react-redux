@@ -6,6 +6,8 @@ import { Loader } from './../loader/loaderLayout';
 import Home from './../home/homeContainer';
 import { LoaderChunks } from '../../store/loaderActionsReducer';
 
+import { genericService } from '../../libs/genericService';
+
 interface IPropsType {
   loader: ILoaderType;
   actionInitPollConfig: () => void;
@@ -20,6 +22,15 @@ class IndexLayout extends React.Component<
   componentDidMount() {
     this.props.actionInitPollConfig();
     this.props.actionLoaderRemoveChunk(LoaderChunks.CHUNK_CONFIG);
+
+    genericService
+      .getInstance({
+        endpoint: 'https://pcms.123beta.net/config/config.json',
+        ttl: 3600,
+        forceRefresh: true,
+      })
+      .getData()
+      .then((response: any) => console.log('>>>>>>RESPONSE', response));
   }
 
   render() {

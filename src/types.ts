@@ -36,8 +36,13 @@ export interface IHomeItemsType {
   [key: string]: IHomeItemType;
 }
 
-interface IHomeItemType {
-  id: any;
+export interface IHomeItemType {
+  id: string;
+  featureImage?: string;
+  title: string;
+  lastUpdateDate?: string;
+  excerpt?: string;
+  description?: string;
 }
 
 export interface ILoadingType {

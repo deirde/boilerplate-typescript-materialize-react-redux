@@ -18,7 +18,7 @@ const configUpdate = (payload: IConfigType) => {
 export const actionInitPollConfig = () => {
   return (dispatch: Dispatch<any>) => {
     setTimeout(function handlePollConfig() {
-      fetch(configClient.getInstance()._request)
+      fetch(configClient.getInstance().request)
         .then((response) => response.json())
         .then((payload) => {
           dispatch(configUpdate(payload));
